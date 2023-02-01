@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"geek-stash/repository"
 	"log"
 	"os"
@@ -18,6 +19,8 @@ func main() {
 	repo.SetupRoutes(app)
 
 	app.Listen("0.0.0.0:"+getPort())
+
+	fmt.Printf("App listening on:: %v", "0.0.0.0:"+getPort() )
 }
 
 func getPort() string {
@@ -26,6 +29,7 @@ func getPort() string {
 		port = "8080"
 		return port
 	}
+	fmt.Println("Will be listenstening on Railway Port::", port)
 	return port
 }
 
