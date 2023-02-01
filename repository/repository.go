@@ -2,12 +2,16 @@ package repository
 
 import (
 	"geek-stash/dtos"
+	"geek-stash/handlers"
 	"geek-stash/models"
 	"geek-stash/storage"
 	"log"
 	"net/http"
 	"os"
-	"time"
+	"strconv"
+
+	// "time"
+
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -36,7 +40,8 @@ func InitRepo () Repository {
 	}
 
 	// Migrations
-	err = models.MigrateFranchise(db) //migrating franchise
+	models.RunAllMigrations(db) //migrating franchise
+
 
 	if err != nil {
 		log.Fatal("Unable to migrate")
@@ -49,16 +54,19 @@ func InitRepo () Repository {
 
 func (repo *Repository) SetupRoutes(app *fiber.App){
 	api := app.Group("/api")
+	//franchise
 	api.Post("franchise/create", repo.CreateFranchise)
 	api.Get("franchise/get", repo.GetFranchises)
+
+	// Profile
+	api.Post("profile/create", repo.CreateProfile)
 }
 
 func (repo *Repository) CreateFranchise(context *fiber.Ctx) error {
 	franchise := &dtos.Franchise{}
 	
-	
 	err := context.BodyParser(&franchise)
-
+	
 	if err != nil {
 		context.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
 				"message": "Request Failed",
@@ -67,7 +75,6 @@ func (repo *Repository) CreateFranchise(context *fiber.Ctx) error {
 			})
 		return err
 	}
-	franchise.CreatedOn = time.Now().UTC().Format(time.RFC3339)
 
 	err = repo.DB.Create(franchise).Error
 
@@ -81,10 +88,28 @@ func (repo *Repository) CreateFranchise(context *fiber.Ctx) error {
 	return nil
 }
 
+func (repo *Repository) CreateProfile(context *fiber.Ctx) error {
+	return handlers.CreateProfile(repo.DB, context)
+}
+
 func (repo *Repository) GetFranchises(context *fiber.Ctx) error {
 	franchiseModel := &[]models.Franchise{}
+	franchise_id := context.Query("id")
+	size, s_err := strconv.Atoi(context.Query("size"))
+	page, p_err := strconv.Atoi(context.Query("page"))
+	if s_err != nil {
+		size = 10
+	}
+	if p_err != nil {
+		page = 0
+	}
 
-	err := repo.DB.Find(franchiseModel).Error
+	var err error;
+	if franchise_id == "" {
+		err = repo.DB.Limit(size).Offset(page).Find(franchiseModel).Error
+	}else{
+		err = repo.DB.First(&franchiseModel,"id = ?", franchise_id).Error
+	}
 
 	if err != nil {
 		context.Status(http.StatusBadRequest).JSON(&fiber.Map{"message": "Unable to retrieve entities", "data": nil, "status": 400})

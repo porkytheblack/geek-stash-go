@@ -1,10 +1,12 @@
 package models
 
 import (
+	"fmt"
 	"log"
 	"time"
-	"gorm.io/gorm"
+
 	"github.com/satori/go.uuid"
+	"gorm.io/gorm"
 )
 
 
@@ -15,18 +17,22 @@ type Franchise struct {
 	EndDate			*string 		`gorm:"type:varchar;default:null" json:"end_date"`	
 	Image			*string 		`gorm:"type:text;default:null" json:"image"`
 	Description		*string 		`gorm:"type:text;default:null" json:"description"`
-	CreatedOn		time.Time		`gorm:"not null;type:timestamp;default:current_timestamp" json:"created_on"`
+	CreatedOn		time.Time		`gorm:"not null;type:timestamptz;default:current_timestamp" json:"created_on"`
+	UpdatedOn		time.Time		`gorm:"not null;type:timestamptz;default:current_timestamp" json:"updated_on"`
 	CreatedBy		uuid.UUID 		`gorm:"type:uuid; not null" json:"created_by"`
 	Status			string			`gorm:"default:'private'" json:"status"`	
+	Gadget			[]Gadget		`gorm:"foreignKey:franchise;references:ID"`
+	Specie			[]Specie		`gorm:"foreignKey:franchise;references:ID"`
+	Character		[]Character		`gorm:"foreignKey:franchise;references:ID"`
 }
 
-func MigrateFranchise ( db *gorm.DB ) error {
+func MigrateFranchise ( db *gorm.DB ) {
 	err := db.AutoMigrate(&Franchise{})
 
 	if err != nil {
 		log.Fatalf("Migration Error Occured :: %v", err)
-		return err
 	}
 
-	return nil
+	fmt.Println("Successfull Migrated Franchise!!")
+
 } 
