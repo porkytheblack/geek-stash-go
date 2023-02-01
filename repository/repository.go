@@ -54,6 +54,10 @@ func InitRepo () Repository {
 
 func (repo *Repository) SetupRoutes(app *fiber.App){
 	api := app.Group("/api")
+
+	//ping
+	api.Get("", repo.Ping)
+
 	//franchise
 	api.Post("franchise/create", repo.CreateFranchise)
 	api.Get("franchise/get", repo.GetFranchises)
@@ -85,6 +89,15 @@ func (repo *Repository) CreateFranchise(context *fiber.Ctx) error {
 
 	context.Status(http.StatusOK).JSON(&fiber.Map{"message": "Entity Created Successfully", "data": nil, "status": 200,})
 
+	return nil
+}
+
+func (repo *Repository) Ping(context *fiber.Ctx) error {
+	context.Status(http.StatusOK).JSON(&fiber.Map{
+		"message": "Howdy",
+		"body": nil,
+		"status": 200,
+	})
 	return nil
 }
 
