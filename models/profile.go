@@ -12,7 +12,7 @@ type Profile struct {
 	ID		uuid.UUID		`gorm:"type:uuid;not null;primaryKey;default:uuid_generate_v4()" json:"id"`
 	UserName	string 		`gorm:"type:varchar;not null" json:"username"`
 	PicUrl		*string		`gorm:"type:text;default:null" json:"pic_url"`
-	Access		string		`gorm:"type:varchar;default:'user'"`
+	Access		string		`gorm:"type:access_level;default:'user'"`
 	Franchise 	[]Franchise	`gorm:"foreignKey:CreatedBy;references:ID"`
 	Gadget		[]Gadget	`gorm:"foreignKey:CreatedBy;references:ID"`
 	Specie		[]Specie	`gorm:"foreignKey:CreatedBy;references:ID"`
