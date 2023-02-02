@@ -7,24 +7,25 @@ import (
 	"gorm.io/gorm"
 )
 
-func CreateProfile (db *gorm.DB, context *fiber.Ctx) error {
-	profile := &dtos.Profile{}
 
-	err := context.BodyParser(profile)
+func CreatePlace(db *gorm.DB, context *fiber.Ctx) error {
+	place := &dtos.Place{}
+
+	err := context.BodyParser(place)
 
 	if err != nil {
 		context.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
-			"message": "Request Faliled",
+			"message": "Request failed",
 			"body": nil,
 			"status": 422,
 		})
 		return err
 	}
 
-	err = db.Create(profile).Error 
+	err = db.Create(place).Error
 
 	if err != nil {
-		context.Status(http.StatusOK).JSON(&fiber.Map{
+		context.Status(http.StatusInternalServerError).JSON(&fiber.Map{
 			"message": "Could not create entity",
 			"body": nil,
 			"status": 500,
@@ -37,8 +38,5 @@ func CreateProfile (db *gorm.DB, context *fiber.Ctx) error {
 		"data": nil,
 		"status": 200,
 	})
-
-
-
-	return nil;
+	return nil
 }

@@ -64,6 +64,16 @@ func (repo *Repository) SetupRoutes(app *fiber.App){
 
 	// Profile
 	api.Post("profile/create", repo.CreateProfile)
+
+	//Place
+	api.Post("place/create", repo.CreatePlace)
+
+	//Character
+	api.Post("character/create", repo.CreateCharacter)
+
+	//Specie
+	api.Post("specie/create", repo.CreateSpecie)
+
 }
 
 func (repo *Repository) CreateFranchise(context *fiber.Ctx) error {
@@ -90,6 +100,22 @@ func (repo *Repository) CreateFranchise(context *fiber.Ctx) error {
 	context.Status(http.StatusOK).JSON(&fiber.Map{"message": "Entity Created Successfully", "data": nil, "status": 200,})
 
 	return nil
+}
+
+func (repo *Repository) CreateSpecie(context *fiber.Ctx) error {
+	return handlers.CreateSpecie(repo.DB, context)
+}
+
+func (repo *Repository) CreateCharacter(context *fiber.Ctx) error {
+	return handlers.CreateCharacter(repo.DB, context)
+}
+
+func (repo *Repository) CreateGadget(context *fiber.Ctx) error {
+	return handlers.CreateGadgets(repo.DB, context)
+}
+
+func (repo *Repository) CreatePlace(context *fiber.Ctx) error {
+	return handlers.CreatePlace(repo.DB, context)
 }
 
 func (repo *Repository) Ping(context *fiber.Ctx) error {
