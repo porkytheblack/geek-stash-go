@@ -10,8 +10,7 @@ type Franchise struct {
 }
 
 type Profile struct {
-	UserName	string		`json:"username"`
-	PicUrl		string		`json:"pic_url"`
+	Id			string		`json:"id"`
 }
 
 type Place struct {
