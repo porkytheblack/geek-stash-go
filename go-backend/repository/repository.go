@@ -14,6 +14,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 
@@ -53,6 +54,8 @@ func InitRepo () Repository {
 }
 
 func (repo *Repository) SetupRoutes(app *fiber.App){
+
+	app.Use(logger.New())
 	api := app.Group("/api")
 
 	//ping

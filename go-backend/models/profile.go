@@ -10,6 +10,7 @@ import (
 
 type Profile struct {
 	ID		uuid.UUID		`gorm:"type:uuid;not null;primaryKey;default:uuid_generate_v4()" json:"id"`
+	AuthID		string		`gorm:"type:varchar; unique;" json:"auth_id"`
 	UserName	string 		`gorm:"type:varchar;not null" json:"username"`
 	PicUrl		*string		`gorm:"type:text;default:null" json:"pic_url"`
 	Access		string		`gorm:"type:access_level;default:'user'"`
