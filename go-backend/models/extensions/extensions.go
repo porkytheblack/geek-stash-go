@@ -128,6 +128,7 @@ func MigrateExtensions(db *gorm.DB){
 	for _, extension_name := range []string{
 		"uuid-ossp",
 		"pgcrypto",
+		"pg_trgm",
 	} {
 		addExtension(extension_name, db)
 	}

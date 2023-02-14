@@ -3,6 +3,7 @@ package repository
 import (
 	"geek-stash/dtos"
 	"geek-stash/handlers"
+	"geek-stash/middleware"
 	"geek-stash/models"
 	"geek-stash/storage"
 	"log"
@@ -13,8 +14,8 @@ import (
 	// "time"
 
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"gorm.io/gorm"
 )
 
 
@@ -56,6 +57,7 @@ func InitRepo () Repository {
 func (repo *Repository) SetupRoutes(app *fiber.App){
 
 	app.Use(logger.New())
+	app.Use(middleware.Auth)
 	api := app.Group("/api")
 
 	//ping
@@ -76,6 +78,9 @@ func (repo *Repository) SetupRoutes(app *fiber.App){
 
 	//Specie
 	api.Post("specie/create", repo.CreateSpecie)
+
+	//Keys
+	api.Post("keys/new", repo.GenerateKeys)
 
 }
 
@@ -135,6 +140,7 @@ func (repo *Repository) CreateProfile(context *fiber.Ctx) error {
 }
 
 func (repo *Repository) GetFranchises(context *fiber.Ctx) error {
+	// middleware.SetDBSession(repo.DB, context)
 	franchiseModel := &[]models.Franchise{}
 	franchise_id := context.Query("id")
 	size, s_err := strconv.Atoi(context.Query("size"))
@@ -161,4 +167,10 @@ func (repo *Repository) GetFranchises(context *fiber.Ctx) error {
 	context.Status(http.StatusOK).JSON(&fiber.Map{"message": "Entities recieved successfully", "entities": franchiseModel, "status": 200})
 
 	return nil
+}
+
+//Keys ------------------------
+	// ----------Generate------
+func (repo *Repository) GenerateKeys(context *fiber.Ctx) error {
+	return handlers.KeyGen(repo.DB, context)
 }

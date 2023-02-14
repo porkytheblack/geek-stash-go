@@ -40,3 +40,5 @@ func CreatePlace(db *gorm.DB, context *fiber.Ctx) error {
 	})
 	return nil
 }
+
+

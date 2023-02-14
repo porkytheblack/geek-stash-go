@@ -16,8 +16,8 @@ func SessionLogin (db *gorm.DB) {
 	  declare claims json;
 	  declare id text;
 	  begin
-		claims := jwt.verify(token, %s);
-		id := claims->sub::text;
+		claims := row_to_json(jwt.verify(token, '%s'))->'payload';
+		id := claims->'sub'::text;
 		perform
 			set_config('request.jwt.claim.sub', id::text, TRUE);
 	  end;
@@ -51,8 +51,12 @@ func GetSessionUID (db *gorm.DB) {
 		create or replace function uid ()
 		returns uuid as
 		$$
-			select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid;
-		$$ language sql stable;
+		declare a uuid;
+		begin
+			a := regexp_replace(nullif(current_setting('request.jwt.claim.sub', true), ''), '"', '', 'g')::uuid;
+			return a;
+		end;
+		$$ language plpgsql;
 	`).Error
 
 	if err != nil {
