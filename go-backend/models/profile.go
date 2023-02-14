@@ -19,6 +19,7 @@ type Profile struct {
 	Specie		[]Specie	`gorm:"foreignKey:CreatedBy;references:ID"`
 	Character	[]Character	`gorm:"foreignKey:CreatedBy;references:ID"`
 	Place		[]Place		`gorm:"foreignKey:CreatedBy;references:ID"`
+	Keys		[]Keys		`gorm:"foreignKey:Owner;references:ID"`
 }
 
 func MigrateProfile (db *gorm.DB) {
