@@ -11,6 +11,7 @@ import (
 
 type Character struct {
 	ID		uuid.UUID		`gorm:"type:uuid;default:uuid_generate_v4();primaryKey;not null" json:"id"`
+	Name		*string			`gorm:"type:varchar;default:null" json:"name"`
 	Bio		*string			`gorm:"type:varchar;default:null" json:"bio"`
 	Attributes	*string		`gorm:"type:varchar;default:null" json:"attributes"`
 	Description	*string		`gorm:"type:text;default:null" json:"description"`
