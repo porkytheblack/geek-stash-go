@@ -1,15 +1,12 @@
 package repository
 
 import (
-	"geek-stash/dtos"
 	"geek-stash/handlers"
 	"geek-stash/middleware"
 	"geek-stash/models"
 	"geek-stash/storage"
 	"log"
-	"net/http"
 	"os"
-	"strconv"
 
 	// "time"
 
@@ -22,6 +19,8 @@ import (
 type Repository struct {
 	DB *gorm.DB
 }
+
+
 
 
 func InitRepo () Repository {
@@ -60,117 +59,35 @@ func (repo *Repository) SetupRoutes(app *fiber.App){
 	app.Use(middleware.Auth)
 	api := app.Group("/api")
 
-	//ping
-	api.Get("", repo.Ping)
+	GenerateHandlers( handlers.APIHandlers , api, repo.DB)
 
-	//franchise
-	api.Post("franchise/create", repo.CreateFranchise)
-	api.Get("franchise/get", repo.GetFranchises)
-
-	// Profile
-	api.Post("profile/create", repo.CreateProfile)
-
-	//Place
-	api.Post("place/create", repo.CreatePlace)
-
-	//Character
-	api.Post("character/create", repo.CreateCharacter)
-
-	//Specie
-	api.Post("specie/create", repo.CreateSpecie)
-
-	//Keys
-	api.Post("keys/new", repo.GenerateKeys)
 
 }
 
-func (repo *Repository) CreateFranchise(context *fiber.Ctx) error {
-	franchise := &dtos.Franchise{}
+
+func GenerateHandlers( handlers []handlers.APIHandler, api fiber.Router, db *gorm.DB) {
 	
-	err := context.BodyParser(&franchise)
-	
-	if err != nil {
-		context.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
-				"message": "Request Failed",
-				"body": nil,
-				"status": "400",
-			})
-		return err
+	for _, handler := range handlers {
+		_h := func (ctx *fiber.Ctx) error {
+			return handler.Handler(db, ctx)
+		}
+		switch handler.Method {
+		case	"GET":
+			api.Get(handler.Route, _h)
+			log.Printf("Request ::get:: %s done", handler.Route)
+		case	"POST":
+			api.Post(handler.Route, _h)
+			log.Printf("Request ::post:: %s done", handler.Route)
+		case	"PUT":
+			api.Put(handler.Route, _h)
+			log.Printf("Request ::put:: %s done", handler.Route)
+		case	"DELETE":
+			api.Delete(handler.Route, _h)
+			log.Printf("Request ::delete:: %s done", handler.Route)
+		default:
+			api.Get(handler.Route, _h)
+			log.Printf("Request :: %s done", handler.Route)
+		}
 	}
 
-	err = repo.DB.Create(franchise).Error
-
-	if err != nil {
-		context.Status(http.StatusBadRequest).JSON(&fiber.Map{"message": "Could not create entity", })
-		return err
-	}
-
-	context.Status(http.StatusOK).JSON(&fiber.Map{"message": "Entity Created Successfully", "data": nil, "status": 200,})
-
-	return nil
-}
-
-func (repo *Repository) CreateSpecie(context *fiber.Ctx) error {
-	return handlers.CreateSpecie(repo.DB, context)
-}
-
-func (repo *Repository) CreateCharacter(context *fiber.Ctx) error {
-	return handlers.CreateCharacter(repo.DB, context)
-}
-
-func (repo *Repository) CreateGadget(context *fiber.Ctx) error {
-	return handlers.CreateGadgets(repo.DB, context)
-}
-
-func (repo *Repository) CreatePlace(context *fiber.Ctx) error {
-	return handlers.CreatePlace(repo.DB, context)
-}
-
-func (repo *Repository) Ping(context *fiber.Ctx) error {
-	context.Status(http.StatusOK).JSON(&fiber.Map{
-		"message": "Howdy",
-		"body": nil,
-		"status": 200,
-	})
-	return nil
-}
-
-func (repo *Repository) CreateProfile(context *fiber.Ctx) error {
-	return handlers.CreateProfile(repo.DB, context)
-}
-
-func (repo *Repository) GetFranchises(context *fiber.Ctx) error {
-	// middleware.SetDBSession(repo.DB, context)
-	franchiseModel := &[]models.Franchise{}
-	franchise_id := context.Query("id")
-	size, s_err := strconv.Atoi(context.Query("size"))
-	page, p_err := strconv.Atoi(context.Query("page"))
-	if s_err != nil {
-		size = 10
-	}
-	if p_err != nil {
-		page = 0
-	}
-
-	var err error;
-	if franchise_id == "" {
-		err = repo.DB.Limit(size).Offset(page).Find(franchiseModel).Error
-	}else{
-		err = repo.DB.First(&franchiseModel,"id = ?", franchise_id).Error
-	}
-
-	if err != nil {
-		context.Status(http.StatusBadRequest).JSON(&fiber.Map{"message": "Unable to retrieve entities", "data": nil, "status": 400})
-		return err
-	}
-
-	context.Status(http.StatusOK).JSON(&fiber.Map{"message": "Entities recieved successfully", "entities": franchiseModel, "status": 200})
-
-	return nil
-}
-
-//Keys ------------------------
-	// ----------Generate------
-func (repo *Repository) GenerateKeys(context *fiber.Ctx) error {
-	return handlers.KeyGen(repo.DB, context)
 }
