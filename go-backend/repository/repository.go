@@ -59,33 +59,34 @@ func (repo *Repository) SetupRoutes(app *fiber.App){
 	app.Use(middleware.Auth)
 	api := app.Group("/api")
 
-	GenerateHandlers( handlers.APIHandlers , api, repo.DB)
+	GenerateHandlers( &handlers.APIHandlers , &api, repo.DB)
 
 
 }
 
 
-func GenerateHandlers( handlers []handlers.APIHandler, api fiber.Router, db *gorm.DB) {
+func GenerateHandlers( handlers *[]handlers.APIHandler, api *fiber.Router, db *gorm.DB) {
 	
-	for _, handler := range handlers {
+	for i := range (*handlers) {
+		handler := (*handlers)[i]
 		_h := func (ctx *fiber.Ctx) error {
 			return handler.Handler(db, ctx)
 		}
 		switch handler.Method {
 		case	"GET":
-			api.Get(handler.Route, _h)
+			(*api).Get(handler.Route, _h)
 			log.Printf("Request ::get:: %s done", handler.Route)
 		case	"POST":
-			api.Post(handler.Route, _h)
+			(*api).Post(handler.Route, _h)
 			log.Printf("Request ::post:: %s done", handler.Route)
 		case	"PUT":
-			api.Put(handler.Route, _h)
+			(*api).Put(handler.Route, _h)
 			log.Printf("Request ::put:: %s done", handler.Route)
 		case	"DELETE":
-			api.Delete(handler.Route, _h)
+			(*api).Delete(handler.Route, _h)
 			log.Printf("Request ::delete:: %s done", handler.Route)
 		default:
-			api.Get(handler.Route, _h)
+			(*api).Get(handler.Route, _h)
 			log.Printf("Request :: %s done", handler.Route)
 		}
 	}

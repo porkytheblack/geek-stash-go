@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"geek-stash/dtos"
+	"geek-stash/utils"
 	"log"
 	"strings"
 
@@ -67,20 +69,49 @@ var APIHandlers []APIHandler = []APIHandler{
 		Handler: CreateFranchise,
 		Method: "POST",
 	},
+	{
+		Route: "franchise",
+		Handler: GetFranchise,
+		Method: "GET",
+	},
+	{
+		Route: "characters",
+		Handler: GetCharacter,
+		Method: "GET",
+	},
+	{
+		Route: "places",
+		Handler: GetPlace,
+		Method: "GET",
+	},
+	{
+		Route: "species",
+		Handler: GetSpecie,
+		Method: "GET",
+	},
 }
 
 
-func GetResults ( db *gorm.DB, result *interface{}, query string ) (interface{}, error ) {
-	full_query := fmt.Sprintf(`
-		do $$
-			%s
-		$$;
-	`, query)
+func GetResults ( db *gorm.DB, result interface{}, query string ) (interface{}, error ) {
 
-	err := db.Raw(full_query).Scan(result).Error
+	var d *string;
+
+	err := db.Raw(query).Scan(&d).Error
+
+	if d == nil {
+		return nil, errors.New("nothing found")
+	}
 
 	if err != nil {
 		log.Printf("An error occured running query:: %s", err)
+		return nil, err
+	}
+
+	log.Printf("Result: %v", d)
+	err = json.Unmarshal([]byte(*d), &result)
+
+	if err != nil {
+		log.Printf("An error occured unmarshalling query result:: %s", err)
 		return nil, err
 	}
 
@@ -89,27 +120,27 @@ func GetResults ( db *gorm.DB, result *interface{}, query string ) (interface{},
 
 
 func ResultObject ( resultType string, id string ) interface {} {
-	
-	var r interface{};
+
+	r := interface{}(nil)
 
 	switch resultType {
 	case "Franchise":
 		if id != "" {
-			r = dtos.GetFranchise{}
+			r =  dtos.GetFranchise{}
 		} else {
-			r = []dtos.GetFranchise{}
+			r =  []dtos.GetFranchise{}
 		}
 	case "Place":
 		if id != ""  {
 			r = dtos.GetPlace{}
 		} else {
-			r = []dtos.GetPlace{}
+			r =  []dtos.GetPlace{}
 		}
 	case "Specie":
 		if id != ""  {
 			r = dtos.GetSpecie{}
 		} else {
-			r = []dtos.GetPlace{}
+			r = []dtos.GetSpecie{}
 		}
 	case "Gadget":
 		if id != ""  {
@@ -121,7 +152,7 @@ func ResultObject ( resultType string, id string ) interface {} {
 		if id != ""  {
 			r = dtos.GetCharacter{}
 		} else {
-			r = []dtos.GetGadget{}
+			r = []dtos.GetCharacter{}
 		}
 	default:
 		// do nothing
@@ -131,17 +162,24 @@ func ResultObject ( resultType string, id string ) interface {} {
 
 }
 
-func GenerateQueryString ( id string, page string, size string, queryOne string, queryMany string ) (*string, error) {
+func GenerateQueryString ( id string, page string, size string, queryOne string, queryMany string ) (string, error) {
 	var str string;
 	if id == "" {
 		if page == "" || size == "" {
-			return nil, errors.New("page or Size is invalid")
+			return "", errors.New("not found")
 		} else {
+			if !utils.IsValidNumber(page) || !utils.IsValidNumber(size) {
+				return "", errors.New("invalid Request")
+			}
 			str = strings.Replace(queryMany, "[page]", page, 1)
 			str = strings.Replace(str, "[size]", size, 1)
 		}
 	}else {
-		str = strings.Replace(queryOne, "[id]", id, 1)
+		if !utils.IsValidUUID(id) {
+			return "", errors.New("not found")
+		}
+		log.Printf("id: %s", id)
+		str = strings.Replace(queryOne, "[id]", fmt.Sprintf(`'%s'`, id), 1)
 	}
-	return &str, nil
+	return str, nil
 }
