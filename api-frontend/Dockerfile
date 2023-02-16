@@ -1,6 +1,12 @@
 FROM node:18-alpine
 
+RUN adduser --disabled-password --gecos "" runner \
+    && usermod -aG sudo runner \
+    && chown -R runner:runner /app
+
 WORKDIR /app
+
+USER runner
 
 COPY package.json yarn.lock ./
 
