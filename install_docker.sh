@@ -4,7 +4,7 @@
 if ! [ -x "$(command -v docker)" ]; then
     # install docker
     echo "Installing docker"
-    sudo apt-get update
+    echo "Y" | sudo apt-get update
     sudo apt-get install \
         ca-certificates \
         curl \
