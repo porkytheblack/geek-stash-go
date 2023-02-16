@@ -8,4 +8,4 @@ Re-implementation of [geek-stash](https://github.com/porkytheblack/geek-stash) i
 
 ⚠️ This is a work in progress. ⚠️
 
-still under construction..
+still under construction.
