@@ -1,0 +1,43 @@
+name: Geek Stash App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: geek-stash-go-runner
+
+    env:
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASS: ${{ secrets.DB_PASS }}
+      AUTH0_SECRET: ${{ secrets.AUTH0_SECRET }
+      AUTH0_BASE_URL: ${{ secrets.AUTH0_BASE_URL }}
+      AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
+      AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+      AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+      XAUTHKEY: ${{ secrets.XAUTHKEY }}
+      GO_ENV: ${{ secrets.GO_ENV }}
+      DEV_EMAIL: ${{ secrets.DEV_EMAIL }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: geekstash/geek-stash-go:latest
+      - name: Deploy application
+        run: docker-compose up -d
