@@ -28,9 +28,9 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Install Docker Compose
-      run: bash ./install_docker_compose.sh
+      run: bash ./install_docker.sh
 
     - name: Build and run Docker Compose
       run: |
-        which docker-compose
-        docker-compose --version 
+        which docker 
+        docker --version
