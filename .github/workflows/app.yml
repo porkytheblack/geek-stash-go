@@ -33,5 +33,6 @@ jobs:
 
     - name: Build and run Docker Compose
       run: |
+        sudo usermod -aG docker runner
         docker compose build
         docker compose up -d
