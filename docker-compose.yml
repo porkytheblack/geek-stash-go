@@ -16,7 +16,7 @@ services:
     build:
       context: ./api-frontend
       dockerfile: Dockerfile
-    image: nodejs
+    image: node:18-alpine
     container_name: frontend
     restart: always
     environment:
@@ -35,7 +35,7 @@ services:
     build:
       context: ./go-backend
       dockerfile: Dockerfile
-    image: golang
+    image: golang:1.16-alpine 
     container_name: backend
     restart: always
     environment:
