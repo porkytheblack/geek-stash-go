@@ -28,9 +28,9 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up Docker Compose
-      uses: docker/compose-cli-action@v0.1.2
+      uses: adrielcodeco/docker-compose-run-action@v1
       with:
-        compose-file: docker-compose.yml
+        compose-file: './docker-compose.yml'
 
     - name: Build and run Docker Compose services
       run:  docker-compose up -d
