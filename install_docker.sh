@@ -26,7 +26,7 @@ if ! [ -x "$(command -v docker)" ]; then
 
     sudo apt-get update
     echo "Done updating"
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    echo "Y" | sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     echo "Done installing docker"
     sudo docker run hello-world
     echo "Done running hello world"
