@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine 
+FROM golang:1.19.4-alpine3.14
 
 WORKDIR /app
 
@@ -39,8 +39,6 @@ COPY . ./
 RUN ls -la
 
 RUN go mod download
-
-
 
 
 RUN go build -o /main
