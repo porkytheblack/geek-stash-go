@@ -36,6 +36,8 @@ RUN echo " stuff:: ${AUTH0_BASE_URL} ${AUTH0_ISSUER_BASE_URL} ${AUTH0_CLIENT_ID}
 
 COPY . ./
 
+RUN ls -la
+
 RUN go mod download
 
 
@@ -43,4 +45,4 @@ RUN go mod download
 
 RUN go build -o /main
 
-CMD ["/main"]
+CMD ["./main"]
