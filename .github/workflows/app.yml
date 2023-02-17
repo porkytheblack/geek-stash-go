@@ -25,6 +25,22 @@ jobs:
       DEV_EMAIL: ${{ secrets.DEV_EMAIL }}
 
     steps:
+    - name: Print out env variables
+      run: |
+        echo $DB_PORT
+        echo $DB_HOST
+        echo $DB_NAME
+        echo $DB_USER
+        echo $DB_PASS
+        echo $DB_SSLMODE
+        echo $AUTH0_SECRET
+        echo $AUTH0_BASE_URL
+        echo $AUTH0_ISSUER_BASE_URL
+        echo $AUTH0_CLIENT_ID
+        echo $AUTH0_CLIENT_SECRET
+        echo $XAUTHKEY
+        echo $GO_ENV
+        echo $DEV_EMAIL
     - name: Checkout code
       uses: actions/checkout@v2
 
@@ -33,6 +49,5 @@ jobs:
 
     - name: Build and run Docker Compose
       run: |
-        echo ${DB_PORT} ${DB_HOST} ${DB_NAME} ${DB_USER} $DB_PASS $DB_SSLMODE $AUTH0_SECRET $AUTH0_BASE_URL $AUTH0_ISSUER_BASE_URL $AUTH0_CLIENT_ID $AUTH0_CLIENT_SECRET $XAUTHKEY $GO_ENV $DEV_EMAIL
         sudo docker compose build
         sudo docker compose up -d
