@@ -21,7 +21,7 @@ jobs:
       run: sudo docker system prune -a -f
     
     - name: Volume Prune
-      run: sudo docker volume prune -f
+      run: sudo docker volume rm $(docker volume ls -q)
 
     - name: Build and run Docker Compose
       env:
