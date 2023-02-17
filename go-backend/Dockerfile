@@ -43,4 +43,6 @@ RUN go mod download
 
 RUN go build -o /main
 
+RUN ls -la
+
 CMD ["./main"]
