@@ -17,6 +17,9 @@ jobs:
     - name: Install Docker Compose
       run: bash ./install_docker.sh
 
+    - name: System prune
+      run: sudo docker system prune -a -f
+
     - name: Build and run Docker Compose
       env:
         DB_PORT: ${{ secrets.DB_PORT }}
