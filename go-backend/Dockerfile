@@ -3,7 +3,8 @@ FROM golang:1.16-alpine
 WORKDIR /app
 
 
-COPY . .
+
+
 ARG AUTH0_SECRET
 ENV AUTH0_SECRET=${AUTH0_SECRET}
 ARG AUTH0_BASE_URL
@@ -33,10 +34,13 @@ ENV GO_ENV=${GO_ENV}
 
 RUN echo " stuff:: ${AUTH0_BASE_URL} ${AUTH0_ISSUER_BASE_URL} ${AUTH0_CLIENT_ID} ${AUTH0_CLIENT_SECRET} ${XAUTHKEY} ${DB_HOST} ${DB_PORT} ${DB_USER} ${DB_PASS} ${DB_NAME} ${DB_SSLMODE} ${GO_ENV} " 
 
-RUN go get -u golang.org/x/net/netip
+COPY . ./
 
-RUN go mod tidy
+RUN go mod download
 
-RUN go build -o main
 
-CMD ["./main"]
+
+
+RUN go build -o /main
+
+CMD ["/main"]
