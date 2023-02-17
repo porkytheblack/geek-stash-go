@@ -33,11 +33,7 @@ ENV GO_ENV=${GO_ENV}
 
 RUN echo " stuff:: ${AUTH0_BASE_URL} ${AUTH0_ISSUER_BASE_URL} ${AUTH0_CLIENT_ID} ${AUTH0_CLIENT_SECRET} ${XAUTHKEY} ${DB_HOST} ${DB_PORT} ${DB_USER} ${DB_PASS} ${DB_NAME} ${DB_SSLMODE} ${GO_ENV} " 
 
-RUN go mod init github.com/radiant/test
-
 RUN go get -u golang.org/x/net/netip
-
-RUN go get golang.org/x/net
 
 RUN go mod tidy
 
