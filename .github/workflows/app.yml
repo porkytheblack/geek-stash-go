@@ -19,6 +19,9 @@ jobs:
 
     - name: System prune
       run: sudo docker system prune -a -f
+
+    - name: Stop and remove containers
+      run: sudo docker stop $(sudo docker ps -a -q) && sudo docker rm $(sudo docker ps -a -q)
     
     - name: Volume Prune
       run: sudo docker volume rm $(sudo docker volume ls -q)
