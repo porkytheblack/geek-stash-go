@@ -45,4 +45,4 @@ RUN go build -o main
 
 RUN ls -la
 
-CMD ["main"]
+CMD ["./main"]
