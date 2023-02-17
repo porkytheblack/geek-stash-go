@@ -96,7 +96,7 @@ volumes:
   web-root:
     driver_opts:
       type: none
-      device: /home/ubuntu/runner/work/geek-stash-go/geek-stash-go/api-frontend/public
+      device: /home/ubuntu/runner/_work/geek-stash-go/geek-stash-go/api-frontend/public
       o: bind
 
 networks:
