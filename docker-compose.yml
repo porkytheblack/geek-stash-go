@@ -87,7 +87,7 @@ services:
       - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html -email ${DEV_EMAIL} --agree-tos --no-eff-email --staging -d doncodes.xyz -d www.doncodes.xyz
+    command: certonly --webroot --webroot-path=/var/www/html -email ${DEV_EMAIL} --agree-tos --no-eff-email -d doncodes.xyz -d www.doncodes.xyz
 
 volumes:
   certbot-etc:
