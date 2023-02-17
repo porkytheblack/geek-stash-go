@@ -8,21 +8,7 @@ jobs:
   deploy:
     runs-on: self-hosted
 
-    env:
-      DB_PORT: ${{ secrets.DB_PORT }}
-      DB_HOST: ${{ secrets.DB_HOST }}
-      DB_NAME: ${{ secrets.DB_NAME }}
-      DB_USER: ${{ secrets.DB_USER }}
-      DB_PASS: ${{ secrets.DB_PASS }}
-      DB_SSLMODE: ${{ secrets.DB_SSLMODE }}
-      AUTH0_SECRET: ${{ secrets.AUTH0_SECRET }}
-      AUTH0_BASE_URL: ${{ secrets.AUTH0_BASE_URL }}
-      AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
-      AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
-      AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
-      XAUTHKEY: ${{ secrets.XAUTHKEY }}
-      GO_ENV: ${{ secrets.GO_ENV }}
-      DEV_EMAIL: ${{ secrets.DEV_EMAIL }}
+    
 
     steps:
     - name: Checkout code
@@ -32,6 +18,21 @@ jobs:
       run: bash ./install_docker.sh
 
     - name: Build and run Docker Compose
+      env:
+        DB_PORT: ${{ secrets.DB_PORT }}
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_NAME: ${{ secrets.DB_NAME }}
+        DB_USER: ${{ secrets.DB_USER }}
+        DB_PASS: ${{ secrets.DB_PASS }}
+        DB_SSLMODE: ${{ secrets.DB_SSLMODE }}
+        AUTH0_SECRET: ${{ secrets.AUTH0_SECRET }}
+        AUTH0_BASE_URL: ${{ secrets.AUTH0_BASE_URL }}
+        AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
+        AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+        AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+        XAUTHKEY: ${{ secrets.XAUTHKEY }}
+        GO_ENV: ${{ secrets.GO_ENV }}
+        DEV_EMAIL: ${{ secrets.DEV_EMAIL }}
       run: |
-        sudo docker compose build --build-arg DB_PORT=$DB_PORT --build-arg DB_HOST=$DB_HOST --build-arg DB_NAME=$DB_NAME --build-arg DB_USER=$DB_USER --build-arg DB_PASS=$DB_PASS --build-arg DB_SSLMODE=$DB_SSLMODE --build-arg AUTH0_SECRET=$AUTH0_SECRET --build-arg AUTH0_BASE_URL=$AUTH0_BASE_URL --build-arg AUTH0_ISSUER_BASE_URL=$AUTH0_ISSUER_BASE_URL --build-arg AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID --build-arg AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET --build-arg XAUTHKEY=$XAUTHKEY --build-arg GO_ENV=$GO_ENV --build-arg DEV_EMAIL=$DEV_EMAIL
+        sudo docker compose build -e DB_PORT=$DB_PORT -e DB_HOST=$DB_HOST -e DB_NAME=$DB_NAME -e DB_USER=$DB_USER -e DB_PASS=$DB_PASS -e DB_SSLMODE=$DB_SSLMODE -e AUTH0_SECRET=$AUTH0_SECRET -e AUTH0_BASE_URL=$AUTH0_BASE_URL -e AUTH0_ISSUER_BASE_URL=$AUTH0_ISSUER_BASE_URL -e AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID -e AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET -e XAUTHKEY=$XAUTHKEY -e GO_ENV=$GO_ENV -e DEV_EMAIL=$DEV_EMAIL --no-cache --force-recreate
         sudo docker compose up -d
