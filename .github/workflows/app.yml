@@ -19,6 +19,9 @@ jobs:
 
     - name: System prune
       run: sudo docker system prune -a -f
+    
+    - name: Volume Prune
+      run: sudo docker volume prune -f
 
     - name: Build and run Docker Compose
       env:
