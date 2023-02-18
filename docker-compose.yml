@@ -77,14 +77,8 @@ services:
       sh -c "
         mkdir /etc/nginx/sites-enabled
         ls -l /etc/nginx;
-        ls -l /etc/nginx/sites-available;
-        ls -l /etc/nginx/sites-enabled;
 
-        touch /etc/nginx/sites-enabled/frontend.conf;
-        ls -l /etc/nginx/sites-enabled;
         ln -s /etc/nginx/sites-available/frontend.conf /etc/nginx/sites-enabled/frontend.conf;
-        touch /etc/nginx/sites-enabled/backend.conf;
-        ls -l /etc/nginx/sites-enabled;
         ln -s /etc/nginx/sites-available/backend.conf /etc/nginx/sites-enabled/backend.conf;
         ls -l /etc/nginx/sites-enabled;
         nginx -t;
