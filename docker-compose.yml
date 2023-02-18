@@ -63,10 +63,18 @@ services:
     restart: always
     ports:
       - "80:80"
+      - "443:443"
+    command: |
+      sudo ln -s /etc/nginx/sites-available/frontend.conf /etc/nginx/sites-enabled/
+      sudo ln -s /etc/nginx/sites-available/backend.conf /etc/nginx/sites-enabled/
+      sudo nginx -t
+      sudo systemctl reload nginx
+
     volumes:
       - dhparam:/etc/ssl/certs
       - web-root:/var/www/html
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/frontend.conf:/etc/nginx/sites-available/frontend.conf
+      - ./nginx/backend.conf:/etc/nginx/sites-available/backend.conf
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
     networks:
@@ -87,7 +95,7 @@ services:
       - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html -email ${DEV_EMAIL} --agree-tos --no-eff-email -d doncodes.xyz -d www.doncodes.xyz
+    command: certonly --webroot --webroot-path=/var/www/html -m ${DEV_EMAIL} --agree-tos --no-eff-email -d doncodes.xyz -d www.doncodes.xyz
 
 volumes:
   certbot-etc:
