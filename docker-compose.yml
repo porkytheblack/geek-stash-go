@@ -75,6 +75,7 @@ services:
 
     command: >
       sh -c "
+        mkdir /etc/nginx/sites-enabled;
         ls -l /etc/nginx/sites-available;
         ln -s /etc/nginx/sites-available/frontend.conf /etc/nginx/sites-enabled/frontend.conf;
         ln -s /etc/nginx/sites-available/backend.conf /etc/nginx/sites-enabled/backend.conf;
