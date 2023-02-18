@@ -65,10 +65,10 @@ services:
       - "80:80"
       - "443:443"
     command: |
-      sudo ln -s /etc/nginx/sites-available/frontend.conf /etc/nginx/sites-enabled/
-      sudo ln -s /etc/nginx/sites-available/backend.conf /etc/nginx/sites-enabled/
-      sudo nginx -t
-      sudo systemctl reload nginx
+      ln -s /etc/nginx/sites-available/frontend.conf /etc/nginx/sites-enabled/
+      ln -s /etc/nginx/sites-available/backend.conf /etc/nginx/sites-enabled/
+      nginx -t
+      systemctl reload nginx
 
     volumes:
       - dhparam:/etc/ssl/certs
