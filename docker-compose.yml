@@ -60,7 +60,6 @@ services:
   webserver:
     image: nginx:mainline-alpine
     container_name: webserver
-    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -82,7 +81,11 @@ services:
         ln -s /etc/nginx/sites-available/backend.conf /etc/nginx/sites-enabled/backend.conf;
         ls -l /etc/nginx/sites-enabled;
         nginx -t;
+        ls -la /var/run/nginx.pid;
+        cat /var/log/nginx/error.log;
         nginx -s reload;
+        
+
       "
     
     networks:
