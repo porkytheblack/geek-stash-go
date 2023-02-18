@@ -75,7 +75,7 @@ services:
 
     command: >
       sh -c "
-        ls -a /etc/nginx/sites-available;
+        ls -l /etc/nginx/sites-available;
         ln -s /etc/nginx/sites-available/frontend.conf /etc/nginx/sites-enabled/frontend.conf;
         ln -s /etc/nginx/sites-available/backend.conf /etc/nginx/sites-enabled/backend.conf;
         nginx -t;
