@@ -75,6 +75,7 @@ services:
 
     command: >
       sh -c "
+        mkdir /etc/nginx/sites-enabled
         ls -l /etc/nginx;
         ls -l /etc/nginx/sites-available;
         ls -l /etc/nginx/sites-enabled;
