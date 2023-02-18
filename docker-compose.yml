@@ -66,10 +66,10 @@ services:
       - "443:443"
     command: >
       sh -c "
-        sudo ln -s /etc/nginx/sites-available/frontend.conf /etc/nginx/sites-enabled/frontend.conf;
-        sudo ln -s /etc/nginx/sites-available/backend.conf /etc/nginx/sites-enabled/backend.conf;
+        ln -s /etc/nginx/sites-available/frontend.conf /etc/nginx/sites-enabled/frontend.conf;
+        ln -s /etc/nginx/sites-available/backend.conf /etc/nginx/sites-enabled/backend.conf;
         nginx -t;
-        systemctl reload nginx;
+        nginx -s reload;
       "
 
     volumes:
