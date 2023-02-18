@@ -64,14 +64,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    command: >
-      sh -c "
-        ln -s /etc/nginx/sites-available/frontend.conf /etc/nginx/sites-enabled/frontend.conf;
-        ln -s /etc/nginx/sites-available/backend.conf /etc/nginx/sites-enabled/backend.conf;
-        nginx -t;
-        nginx -s reload;
-      "
-
+    
     volumes:
       - dhparam:/etc/ssl/certs
       - web-root:/var/www/html
@@ -79,6 +72,15 @@ services:
       - ./nginx/backend.conf:/etc/nginx/sites-available/backend.conf
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
+
+    command: >
+      sh -c "
+        ln -s /etc/nginx/sites-available/frontend.conf /etc/nginx/sites-enabled/frontend.conf;
+        ln -s /etc/nginx/sites-available/backend.conf /etc/nginx/sites-enabled/backend.conf;
+        nginx -t;
+        nginx -s reload;
+      "
+    
     networks:
       - app-network
     depends_on:
