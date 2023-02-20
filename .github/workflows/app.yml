@@ -20,8 +20,8 @@ jobs:
     - name: System prune
       run: sudo docker system prune -a -f
 
-    - name: Docker Cleanup
-      run: sudo bash ./docker_cleanup.sh
+    # - name: Docker Cleanup
+    #   run: sudo bash ./docker_cleanup.sh
 
     - name: Build and run Docker Compose
       env:

@@ -24,7 +24,7 @@ services:
         - AUTH0_ISSUER_BASE_URL=${AUTH0_ISSUER_BASE_URL}
     image: node:18-alpine
     container_name: frontend
-    restart: always
+    restart: unless-stopped
     ports:
       - 3000:3000
     networks:
@@ -51,7 +51,7 @@ services:
         - XAUTHKEY=${XAUTHKEY}
     image: golang:1.20.1-bullseye
     container_name: backend
-    restart: always
+    restart: unless-stopped
     ports:
       - 8080:8080
     networks:
@@ -60,6 +60,7 @@ services:
   webserver:
     image: nginx:mainline-alpine
     container_name: webserver
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
@@ -81,6 +82,7 @@ services:
   certbot:
     image: certbot/certbot
     container_name: certbot
+    restart: unless-stopped
     environment:
       - DEV_EMAIL=${DEV_EMAIL}
     volumes:
@@ -89,7 +91,7 @@ services:
       - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html -m ${DEV_EMAIL} --agree-tos --no-eff-email -d api.geekstash.doncodes.xyz -d geekstash.doncodes.xyz --staging
+    command: certonly --webroot --webroot-path=/var/www/html -m ${DEV_EMAIL} --agree-tos --no-eff-email -d api.geekstash.doncodes.xyz -d geekstash.doncodes.xyz
 
 volumes:
   certbot-etc:
