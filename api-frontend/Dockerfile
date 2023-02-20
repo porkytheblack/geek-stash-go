@@ -6,6 +6,7 @@ COPY package.json yarn.lock ./
 
 RUN yarn install
 
+COPY .next/static ./public
 COPY src ./src
 COPY public ./public
 COPY next.config.js .
