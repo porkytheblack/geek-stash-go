@@ -60,7 +60,6 @@ services:
   webserver:
     image: nginx:mainline-alpine
     container_name: webserver
-    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
@@ -82,7 +81,6 @@ services:
   certbot:
     image: certbot/certbot
     container_name: certbot
-    restart: unless-stopped
     environment:
       - DEV_EMAIL=${DEV_EMAIL}
     volumes:
