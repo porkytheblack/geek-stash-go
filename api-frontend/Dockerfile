@@ -11,6 +11,10 @@ COPY src ./src
 COPY public ./public
 COPY next.config.js .
 COPY tsconfig.json .
+COPY .eslintrc.js .
+COPY postcss.config.js .
+COPY tailwind.config.js .
+
 
 ARG AUTH0_SECRET
 ENV AUTH0_SECRET=${AUTH0_SECRET}
