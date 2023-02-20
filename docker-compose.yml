@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   dhparam:
-    image: alpine
+    image: nginx:latest
     volumes:
       - dhparam:/dhparam
     command: >
@@ -67,26 +67,9 @@ services:
     volumes:
       - dhparam:/etc/ssl/certs
       - web-root:/var/www/html
-      - ./nginx/frontend.conf:/etc/nginx/sites-available/frontend.conf
-      - ./nginx/backend.conf:/etc/nginx/sites-available/backend.conf
+      - ./nginx.conf:/etc/nginx/conf.d
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-
-    command: >
-      sh -c "
-        mkdir /etc/nginx/sites-enabled
-        ls -l /etc/nginx;
-
-        ln -s /etc/nginx/sites-available/frontend.conf /etc/nginx/sites-enabled/frontend.conf;
-        ln -s /etc/nginx/sites-available/backend.conf /etc/nginx/sites-enabled/backend.conf;
-        ls -l /etc/nginx/sites-enabled;
-        nginx -t;
-        ls -la /var/run/nginx.pid;
-        cat /var/log/nginx/error.log;
-        nginx -s reload;
-        
-
-      "
     
     networks:
       - app-network
