@@ -2,13 +2,13 @@ version: '3.3'
 
 services:
   dhparam:
-    image: alpine
+    image: nginx:latest
     volumes:
-      - dhparam:/dhparam
+      - dhparam:/etc/ssl/certs
     command: >
       sh -c "
         if [ ! -f /dhparam/dhparam.pem ]; then
-          openssl dhparam -out /dhparam/dhparam.pem 2048;
+          openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048;
         fi
       "
 
@@ -24,7 +24,7 @@ services:
         - AUTH0_ISSUER_BASE_URL=${AUTH0_ISSUER_BASE_URL}
     image: node:18-alpine
     container_name: frontend
-    restart: always
+    restart: unless-stopped
     ports:
       - 3000:3000
     networks:
@@ -51,7 +51,7 @@ services:
         - XAUTHKEY=${XAUTHKEY}
     image: golang:1.20.1-bullseye
     container_name: backend
-    restart: always
+    restart: unless-stopped
     ports:
       - 8080:8080
     networks:
@@ -67,26 +67,9 @@ services:
     volumes:
       - dhparam:/etc/ssl/certs
       - web-root:/var/www/html
-      - ./nginx/frontend.conf:/etc/nginx/sites-available/frontend.conf
-      - ./nginx/backend.conf:/etc/nginx/sites-available/backend.conf
+      - ./nginx:/etc/nginx/conf.d
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-
-    command: >
-      sh -c "
-        mkdir /etc/nginx/sites-enabled
-        ls -l /etc/nginx;
-
-        ln -s /etc/nginx/sites-available/frontend.conf /etc/nginx/sites-enabled/frontend.conf;
-        ln -s /etc/nginx/sites-available/backend.conf /etc/nginx/sites-enabled/backend.conf;
-        ls -l /etc/nginx/sites-enabled;
-        nginx -t;
-        ls -la /var/run/nginx.pid;
-        cat /var/log/nginx/error.log;
-        nginx -s reload;
-        
-
-      "
     
     networks:
       - app-network
@@ -106,7 +89,7 @@ services:
       - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html -m ${DEV_EMAIL} --agree-tos --no-eff-email -d doncodes.xyz -d www.doncodes.xyz
+    command: certonly --webroot --webroot-path=/var/www/html -m porkytheblack@gmail.com --agree-tos --no-eff-email -d geekstash.doncodes.xyz --non-interactive
 
 volumes:
   certbot-etc:
