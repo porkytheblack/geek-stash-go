@@ -89,7 +89,7 @@ services:
       - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html -m ${DEV_EMAIL} --agree-tos --no-eff-email -d api.geekstash.doncodes.xyz -d www.api.geekstash.doncodes.xyz -d geekstash.doncodes.xyz -d www.geekstash.doncodes.xyz
+    command: certonly --webroot --webroot-path=/var/www/html -m ${DEV_EMAIL} --agree-tos --no-eff-email -d api.geekstash.doncodes.xyz -d geekstash.doncodes.xyz
 
 volumes:
   certbot-etc:
