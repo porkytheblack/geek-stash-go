@@ -4,11 +4,11 @@ services:
   dhparam:
     image: nginx:latest
     volumes:
-      - dhparam:/dhparam
+      - dhparam:/etc/ssl/certs
     command: >
       sh -c "
         if [ ! -f /dhparam/dhparam.pem ]; then
-          openssl dhparam -out /dhparam/dhparam.pem 2048;
+          openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048;
         fi
       "
 
@@ -89,7 +89,7 @@ services:
       - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html -m ${DEV_EMAIL} --agree-tos --no-eff-email -d api.geekstash.doncodes.xyz -d geekstash.doncodes.xyz --non-interactive
+    command: certonly --webroot --webroot-path=/var/www/html -m porkytheblack@gmail.com --agree-tos --no-eff-email -d geekstash.doncodes.xyz --non-interactive
 
 volumes:
   certbot-etc:
