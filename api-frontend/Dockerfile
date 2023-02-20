@@ -6,7 +6,7 @@ COPY package.json yarn.lock ./
 
 RUN yarn install
 
-COPY .next/static ./public
+
 COPY src ./src
 COPY public ./public
 COPY next.config.js .
@@ -26,5 +26,7 @@ ENV AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET}
 RUN echo ${AUTH0_BASE_URL} 
 
 RUN yarn build
+
+COPY .next/static ./public
 
 CMD ["yarn", "start"]
