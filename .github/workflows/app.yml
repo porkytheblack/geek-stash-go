@@ -23,12 +23,12 @@ jobs:
     # - name: Docker Cleanup
     #   run: sudo bash ./docker_cleanup.sh
 
-    # - name: Remove backend and frontend containers
-    #   run: |
-    #     sudo docker stop frontend
-    #     sudo docker stop backend
-    #     sudo docker rm frontend
-    #     sudo docker rm backend
+    - name: Remove backend and frontend containers
+      run: |
+        sudo docker stop frontend
+        sudo docker stop backend
+        sudo docker rm frontend
+        sudo docker rm backend
 
     - name: Build and run Docker Compose
       env:

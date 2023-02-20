@@ -27,6 +27,6 @@ RUN echo ${AUTH0_BASE_URL}
 
 RUN yarn build
 
-COPY .next/static ./public
+COPY .next ./public/
 
 CMD ["yarn", "start"]
