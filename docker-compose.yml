@@ -67,7 +67,7 @@ services:
     volumes:
       - dhparam:/etc/ssl/certs
       - web-root:/var/www/html
-      - ./nginx.conf:/etc/nginx/conf.d
+      - ./nginx:/etc/nginx/conf.d
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
     
